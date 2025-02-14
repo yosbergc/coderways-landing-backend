@@ -1,5 +1,6 @@
 import express from 'express'
 import { validateEmail } from './consts/consts'
+import { addEmail } from './models/mysql'
 const app = express()
 
 app.use(express.json())
@@ -9,7 +10,7 @@ app.get('/', (req, res) => {
     res.send('Hello world')
 })
 
-app.post('/', (req, res) => {
+app.post('/', async (req, res) => {
     const { email } = req.body
     if (!email) {
         return res.send('Necesitamos un correo para poder agregarte a nuestra lista de espera.')
@@ -21,5 +22,12 @@ app.post('/', (req, res) => {
         return res.send('Necesitamos un correo valido.')
     }
 
-    
+    try {
+        await addEmail(email)
+        res.json({
+            status: 'Has sido añadido a nuestra lista de espera.'
+        })
+    } catch(error) {
+        res.send('Encontramos un error, trata de nuevo más tarde.')
+    }
 })
