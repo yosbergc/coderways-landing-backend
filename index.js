@@ -1,10 +1,11 @@
 import express from 'express'
-import { validateEmail } from './consts/consts'
-import { addEmail } from './models/mysql'
+import cors from 'cors'
+import { validateEmail } from './consts/consts.js'
+import { addEmail } from './models/mysql.js'
 const app = express()
-
+const PORT = process.env.PORT || 5000;
 app.use(express.json())
-app.use()
+app.use(cors())
 
 app.get('/', (req, res) => {
     res.send('Hello world')
@@ -12,6 +13,10 @@ app.get('/', (req, res) => {
 
 app.post('/', async (req, res) => {
     const { email } = req.body
+    const authorization = req.get('authorization')
+    if (!authorization || authorization !== process.env.SECRET_PHRASE) {
+        return res.send('No estás autenticado para poder realizar esta solicitud.')
+    }
     if (!email) {
         return res.send('Necesitamos un correo para poder agregarte a nuestra lista de espera.')
     }
@@ -31,3 +36,5 @@ app.post('/', async (req, res) => {
         res.send('Encontramos un error, trata de nuevo más tarde.')
     }
 })
+
+app.listen(PORT)
