@@ -1,16 +1,17 @@
 import express from 'express'
 import cors from 'cors'
+import dotenv from 'dotenv'
 import { validateEmail } from './consts/consts.js'
 import { addEmail } from './models/mysql.js'
 const app = express()
 const PORT = process.env.PORT || 5000;
+dotenv.config()
 app.use(express.json())
 app.use(cors())
 
 app.get('/', (req, res) => {
     res.send('Hello world')
 })
-
 app.post('/', async (req, res) => {
     const { email } = req.body
     const authorization = req.get('authorization')
