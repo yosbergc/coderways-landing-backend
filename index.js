@@ -14,10 +14,6 @@ app.get('/', (req, res) => {
 })
 app.post('/', async (req, res) => {
     const { email } = req.body
-    const authorization = req.get('Authorization')
-    if (!authorization || authorization !== process.env.SECRET_PHRASE) {
-        return res.status(401).send('No estás autenticado para poder realizar esta solicitud.')
-    }
     if (!email) {
         return res.status(400).send('Necesitamos un correo para poder agregarte a nuestra lista de espera.')
     }
